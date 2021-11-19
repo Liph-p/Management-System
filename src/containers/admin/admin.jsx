@@ -1,12 +1,25 @@
 import React,{Component} from "react";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 
-export default class Admin extends Component{
+
+class Admin extends Component{
   render(){
-    return (
-      <div className="admin">
-
-      </div>
-    )
+    let {user,isLogin} = this.props.userInfo
+    if(!isLogin){
+      return <Redirect to="/login" />
+    }else{
+      return (
+        <div className="admin">
+          现在是{user.username}
+        </div>
+      )
+    }
+    
   }
 }
+
+export default connect(
+  state => ({userInfo:state.userInfo})
+)(Admin)

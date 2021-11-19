@@ -1,9 +1,10 @@
 import React,{Component} from "react";
 import { connect } from "react-redux";
-import { createdemo1Action,createdemo2Action } from "../../redux/action_creators/login_action";
+import { Redirect } from "react-router-dom";
+import { createSaveUserInfoAction } from "../../redux/action_creators/login_action";
+import { loginReq } from "../../api/index";
 
-
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import "antd/dist/antd.less";
 import logo from "./imgs/logo.png"
@@ -15,8 +16,33 @@ class Login extends Component{
     console.log(this.props)
   }
   //点击登录按钮的回调 antdv4.版本进行了写法的更新
-  onFinish = (values)=>{
+  onFinish = async(values)=>{
     console.log('Received values of form: ', values);
+    let {username,password} = values
+    /* loginReq(username,password).then(
+      (value)=>{console.log(value)}
+    ).catch(
+      (error)=>{
+        console.log(error.message)
+      }
+    ) */
+    let result = await loginReq(username,password)
+    console.log(result);
+    let {status,msg,data} = result
+    if(status === 0 ){
+      //将用户信息还有token交由redux管理
+      this.props.saveUserInfo(data)
+      //跳转到admin路由
+      // this.props.history.replace("/admin")
+      console.log(result);
+    }else{
+      message.warning(msg,1)
+    }
+    
+        
+  }
+  onFinishFailed = ()=>{
+    message.error("表单输入有误，请检查！",1)
   }
   //密码验证器
   pwdValidator = (rule,value)=>{
@@ -34,7 +60,11 @@ class Login extends Component{
   }
   //render
   render(){
-    return (
+    let {isLogin} = this.props
+    if(isLogin){
+      return <Redirect to="/admin" />
+    }else{
+      return (
       <div className="login">
         <header>
           <img src={logo} alt="logo"/>
@@ -48,6 +78,7 @@ class Login extends Component{
             name="normal_login"
             className="login-form"
             onFinish={this.onFinish}
+            onFinishFailed={this.onFinishFailed}
             initialValues={{
               remember: true,
             }}
@@ -84,16 +115,16 @@ class Login extends Component{
           </Form>
         </section>
       </div>
-    )
+      )
+    }    
   }
 }
 
 
 //容器组件
 export default connect(
-  state=>({demo:state.loginReducer}),
+  state=>({isLogin:state.userInfo.isLogin}),
   {
-    demo1:createdemo1Action,
-    demo2:createdemo2Action
+    saveUserInfo:createSaveUserInfoAction
   }
 )(Login)
