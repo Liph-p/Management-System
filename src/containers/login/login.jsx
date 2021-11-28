@@ -7,7 +7,7 @@ import { loginReq } from "../../api/index";
 import { Form, Input, Button, message} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import "antd/dist/antd.less";
-import logo from "./imgs/logo.png"
+import logo from "../../static/imgs/logo.png"
 import "./css/login.less"
 
 //UI组件
@@ -33,18 +33,17 @@ class Login extends Component{
       //将用户信息还有token交由redux管理
       this.props.saveUserInfo(data)
       //跳转到admin路由
-      // this.props.history.replace("/admin")
+      // this.props.history.replace("/admin") 
       console.log(result);
     }else{
       message.warning(msg,1)
-    }
-    
-        
+    }     
   }
+  //统一验证
   onFinishFailed = ()=>{
     message.error("表单输入有误，请检查！",1)
   }
-  //密码验证器
+  //密码验证器 自定义验证
   pwdValidator = (rule,value)=>{
     if(!value){
       return Promise.reject(new Error("请输入密码!"))
@@ -62,8 +61,8 @@ class Login extends Component{
   render(){
     let {isLogin} = this.props
     if(isLogin){
-      return <Redirect to="/admin" />
-    }else{
+      return <Redirect to="/admin/home" />
+    }else{    
       return (
       <div className="login">
         <header>
@@ -85,6 +84,7 @@ class Login extends Component{
           >
             <Form.Item
               name="username"
+              // 声明式验证
               rules={[
                 {required: true, message: '请输入用户名!'},
                 {max: 12, message: '用户名必须小于等于12位!'},
@@ -116,7 +116,8 @@ class Login extends Component{
         </section>
       </div>
       )
-    }    
+    }
+        
   }
 }
 

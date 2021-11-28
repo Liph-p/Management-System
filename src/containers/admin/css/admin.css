@@ -1,0 +1,14 @@
+.admin {
+  height: 100%;
+}
+.admin .sider {
+  background-color: #001529;
+}
+.admin .content {
+  background-color: white;
+  margin: 20px 20px 0 20px;
+}
+.admin .footer {
+  text-align: center;
+}
+/*# sourceMappingURL=./admin.css.map */

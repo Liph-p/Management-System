@@ -9,6 +9,7 @@ export default class App extends Component{
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/admin" component={Admin} />
+          <Route path="/" component={Login} />
         </Switch>
       </div>
     )
