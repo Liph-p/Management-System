@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Link,withRouter } from "react-router-dom";
-import { Menu} from 'antd';
-import { createSaveTitleAction } from "../../../redux/action_creators/menu_actions";
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {Link,withRouter} from "react-router-dom";
+import {Menu} from 'antd';
+import {createSaveTitleAction} from "../../../redux/action_creators/menu_actions";
 import logo from "../../../static/imgs/logo.png";
 import menuConf from "../../../config/menu-config";
 
@@ -13,7 +13,6 @@ const { SubMenu,Item } = Menu;
 
 class LeftNav extends Component{
   componentDidMount(){
-    // console.log("componentDidMount---"+this.props.location.pathname.split("/").reverse()[0]);
   }
 
   createMenu=(target)=>{
@@ -36,7 +35,6 @@ class LeftNav extends Component{
     })
   }
   render(){
-    console.log("createMenu---"+this.props.location.pathname.split("/").reverse()[0]);
     return (
       <div>
         <header className="nav-header">
@@ -44,8 +42,8 @@ class LeftNav extends Component{
           <span>商品后台管理</span>
         </header>
         <Menu
-          defaultSelectedKeys={[this.props.location.pathname.split("/").reverse()[0]]}
-          defaultOpenKeys={this.props.location.pathname.split("/").splice(0)}
+          defaultSelectedKeys={this.props.location.pathname.indexOf("product")!==-1? "product":this.props.location.pathname.split("/").reverse()[0]}
+          defaultOpenKeys={this.props.location.pathname.split("/").splice(2)}
           mode="inline"
           theme="dark"
         >

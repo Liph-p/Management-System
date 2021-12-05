@@ -1,10 +1,12 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import {Card,Button,Table,message,Modal,Form,Input} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
 import {reqCategoryList,reqAddCategoryList,reqUpdateCategoryList} from "../../api/index";
 import {PAGE_SIZE} from "../../config";
+import {createSaveCateList} from "../../redux/action_creators/category_action";
 
-export default class Category extends Component{
+class Category extends Component{
   state = {
     categoryList:[],
     isLoading:true,
@@ -102,6 +104,7 @@ export default class Category extends Component{
     let {status,data,msg} = result
     if(status === 0){
       this.setState({categoryList:data.reverse()})
+      this.props.saveCateList(data)
     }else if(status === 1){
       message.error(msg,1)
     }
@@ -171,3 +174,8 @@ export default class Category extends Component{
     )
   }
 }
+
+export default connect(
+  (state)=>({}),
+  {saveCateList:createSaveCateList}  
+)(Category)

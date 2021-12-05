@@ -21,7 +21,6 @@ class Header extends Component{
 
   //退出登录
   logOut=()=>{
-    console.log(this);
     this.props.deleteUser()
   }
   //获取天气
@@ -58,8 +57,8 @@ class Header extends Component{
   }
   //获取标题
   getTitle = ()=>{
-    console.log(this.props.location.pathname.split("/").reverse()[0]);
     let path = this.props.location.pathname.split("/").reverse()[0]
+    if(this.props.location.pathname.indexOf("product")!==-1) path ="product"
     let title = ""
     menuConf.forEach((item)=>{
       if(item.children instanceof Array){

@@ -27,14 +27,13 @@ class Login extends Component{
       }
     ) */
     let result = await loginReq(username,password)
-    console.log(result);
     let {status,msg,data} = result
     if(status === 0 ){
       //将用户信息还有token交由redux管理
       this.props.saveUserInfo(data)
       //跳转到admin路由
       // this.props.history.replace("/admin") 
-      console.log(result);
+      // console.log(result);
     }else{
       message.warning(msg,1)
     }     
@@ -129,3 +128,9 @@ export default connect(
     saveUserInfo:createSaveUserInfoAction
   }
 )(Login)
+
+
+/* 
+Redirect to/Link to/编程式路由跳转都会改变前端路由，react在改变前端路由后会从头开始
+找(从App开始找)，会一路重新渲染相关组件，但是不会重新挂载，这些组件只会在开始时挂载一次
+*/
