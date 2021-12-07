@@ -1,12 +1,64 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {Card,Button,Form,Input,Select } from 'antd';
+import {Card,Button,Form,Input,Select,message} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import PictureWall from "./picture_wall";
+import PictureTextEditor from "./rich_text_editor";
+import {reqCategoryList,reqAddProduct} from "../../api";
 const { Option } = Select;
 
-export default class AddUpdate extends Component{
+class AddUpdate extends Component{
+  state = {
+    categoryList:[],
+    categoryId:"",
+    name:"",
+    desc:"",
+    price:"",
+    detail:"",
+    imgs:[],
+    operaType:"add"
+  }
+  componentDidMount(){
+    const {categoryList,productList} = this.props
+    if(categoryList.length) this.setState({categoryList})
+    else this.getCategoryList()
+    let {id} = this.props.match.params
+    if(productList.length){
+      if(id){
+      this.setState({operaType:"update"})
+      let product = productList.find((item)=>{
+        return item._id === id
+      })
+      console.log(product);
+      // let {categoryId,name,desc,price,detail,imgs} = product
+      this.setState({...product})
+    }
+    }
+    
+    
+  }
+  //获取分类列表（防止redux）中没有数据
+  getCategoryList = async()=>{
+    let result = await reqCategoryList()
+    const {status,data,msg} = result
+    if(status === 0){
+      this.setState({categoryList:data})
+    }else message.error(msg)    
+  }
+  //表提交的回调
+  onFinish = async(value) => {
+    console.log(value);
+    let imgs = this.pictureWall.getImgArr()
+    let detail = this.richText.getRichText()
+    console.log(imgs,detail);
+    let result = await reqAddProduct({...value,imgs,detail})
+    const {status,msg} = result
+    if(status === 0){
+      message.success("操作成功")
+    }else message.error(msg)
+  }
+
   render(){
-    console.log(this.props);
     return (
       <Card title={
         <div>
@@ -19,37 +71,39 @@ export default class AddUpdate extends Component{
         </div>
       }>
         <Form
-          name="normal_login"
-          className="login-form"
+          name="normal_addproduct"
+          className="addproduct-form"
           onFinish={this.onFinish}
           onFinishFailed={this.onFinishFailed}
-          initialValues={{
-            remember: true,
-          }}
+          labelCol={{md:2}}
+          wrapperCol={{md:7}}
+          // initialValues={{name:this.state.name}}
         >
           <Form.Item
             label="商品名称"
-            name="productName"
+            name="name"
             // 声明式验证
             rules={[
               {required: true, message: '请输入商品名称!'},
             ]}
+            // initialValue={this.state.name}
           >
             <Input placeholder="商品名称" />
           </Form.Item>
           <Form.Item
             label="商品描述"
-            name="productDesc"
+            name="desc"
             // 声明式验证
             rules={[
               {required: true, message: '请输入商品描述!'},
             ]}
+            // initialValue={this.state.desc || ""}
           >
             <Input placeholder="商品描述" />
           </Form.Item>
           <Form.Item
             label="商品价格"
-            name="productPrice"
+            name="price"
             // 声明式验证
             rules={[
               {required: true, message: '请输入商品价格!'},
@@ -59,7 +113,7 @@ export default class AddUpdate extends Component{
           </Form.Item>
           <Form.Item
             label="商品分类"
-            name="productCategory"
+            name="categoryId"
             // 声明式验证
             rules={[
               {required: true, message: '请选择商品分类!'},
@@ -67,31 +121,29 @@ export default class AddUpdate extends Component{
           >
             <Select defaultValue="未选择">
               <Option value="">未选择</Option>
-              {}
-              <Option value="lucy">Lucy</Option>
-              <Option value="Yiminghe">yiminghe</Option>
+              {this.state.categoryList.map((item)=>{
+                return (
+                  <Option key={item._id} value={item._id}>{item.name}</Option>
+                )
+              })}
             </Select>
-
           </Form.Item>
           <Form.Item
-            label="商品名称"
-            name="productName"
-            // 声明式验证
-            rules={[
-              {required: true, message: '请输入商品名称!'},
-            ]}
+            label="商品图片"
+            wrapperCol={{md:12}}
           >
-            <Input placeholder="商品名称" />
+            <PictureWall ref={(PictureWall)=>{this.pictureWall = PictureWall}} />
           </Form.Item>
           <Form.Item
-            label="商品名称"
-            name="productName"
-            // 声明式验证
-            rules={[
-              {required: true, message: '请输入商品名称!'},
-            ]}
+            label="商品详情"
+            wrapperCol={{md:16}}
           >
-            <Input placeholder="商品名称" />
+            <PictureTextEditor ref={(richText)=>{this.richText = richText}}/>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
           </Form.Item>
         </Form>
       </Card>
@@ -100,6 +152,6 @@ export default class AddUpdate extends Component{
   }
 }
 
-connect(
-  state =>({categoryList:state.})
+export default connect(
+  state =>({categoryList:state.categoryList,productList:state.productList})
 )(AddUpdate)

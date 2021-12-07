@@ -15,7 +15,7 @@ class Detail extends Component{
     imgs:[],
     detail:"",
     categoryName:"",
-    isLoading:true
+    isLoading:true,
   }
   componentDidMount(){
     let result = this.props.productList.find((item)=>{
@@ -103,7 +103,7 @@ class Detail extends Component{
             <Item className="item">
               <span className="prod-title">商品图片：</span>
               {this.state.imgs.map((item,index)=>{
-                return <img key={index} src={"/upload/"+item} alt="商品图片" />
+                return <img key={index} src={"/upload/"+item} alt="商品图片" style={{width:'200px'}} />
               })}
             </Item>
             <Item className="item">
