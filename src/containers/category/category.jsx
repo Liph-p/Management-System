@@ -38,6 +38,7 @@ class Category extends Component{
     });
     console.log(this.formRef);
     if(this.formRef){
+      // console.log(this.formRef);
       this.formRef.setFieldsValue({categoryName: name})
     } 
   };
@@ -149,7 +150,7 @@ class Category extends Component{
           onCancel={this.handleCancel}
         >
           <Form
-            name="normal_login"
+            name="normal_category"
             className="category-form"
             ref={(ref)=>{this.formRef = ref}}
             initialValues={{

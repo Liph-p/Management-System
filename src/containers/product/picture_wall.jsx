@@ -57,6 +57,15 @@ export default class PicturesWall extends Component {
     })
     return result
   }
+  //将AddUpdate组件获取的imgArr加入fileList，用于数据回显
+  setImgArr = (imgArr) => {
+    let fileList = []
+    imgArr.forEach((item,index)=>{
+      fileList.push({uid:-index,name:item,url:`${BASE_URL}/upload/${item}`})
+    })
+    this.setState({fileList})
+  }
+
 
   render() {
     const { previewVisible, previewImage, fileList, previewTitle } = this.state;

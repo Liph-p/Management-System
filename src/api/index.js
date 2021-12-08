@@ -39,5 +39,7 @@ export const reqProdById = (productId) => myAxios.get(`${BASE_URL}/manage/produc
 export const reqDeletePicture = (name) => myAxios.post(`${BASE_URL}/manage/img/delete`,{name})
 //添加商品
 export const reqAddProduct = (productObj) => myAxios.post(`${BASE_URL}/manage/product/add`,{...productObj})
+//更新商品
+export const reqAddUpdateProduct = (productObj) => myAxios.post(`${BASE_URL}/manage/product/update`,{...productObj})
 
 
