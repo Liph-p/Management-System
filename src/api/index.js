@@ -45,4 +45,15 @@ export const reqAddUpdateProduct = (productObj) => myAxios.post(`${BASE_URL}/man
 export const reqRoleList = () => myAxios.get(`${BASE_URL}/manage/role/list`)
 //添加角色
 export const reqAddRole = (roleName) => myAxios.post(`${BASE_URL}/manage/role/add`,{roleName})
+//给角色设置权限
+export const reqAddAuth = (authObj) => myAxios.post(`${BASE_URL}/manage/role/update`,{...authObj,auth_time:Date.now()})
+//获取所有用户列表
+export const reqUsersList = () => myAxios.get(`${BASE_URL}/manage/user/list`)
+//添加用户
+export const reqAddUser = (userObj) => myAxios.post(`${BASE_URL}/manage/user/add`,{...userObj})
+//更新用户
+export const reqUpdateUser = (userObj) => myAxios.post(`${BASE_URL}/manage/user/update`,{...userObj})
+//删除用户
+export const reqDeleteUser = (userId) => myAxios.post(`${BASE_URL}/manage/user/delete`,{userId})
+
 

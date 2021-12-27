@@ -17,22 +17,33 @@ class LeftNav extends Component{
 
   createMenu=(target)=>{
     return target.map((item)=>{
-      if(!item.children){
-        return(
-          <Item key={item.key} icon={item.icon} onClick={()=>{this.props.saveTitle(item.title)}}>
-            <Link to={item.path}>
-              {item.title}
-            </Link>
-          </Item>
-        )
-      }else{
-        return(
-          <SubMenu key={item.key} icon={item.icon} title={item.title}>
-            {this.createMenu(item.children)}
-          </SubMenu>
-        )
-      }
+      if(this.hasAuth(item)){
+        if(!item.children){
+          return(
+            <Item key={item.key} icon={item.icon} onClick={()=>{this.props.saveTitle(item.title)}}>
+              <Link to={item.path}>
+                {item.title}
+              </Link>
+            </Item>
+          )
+        }else{
+          return(
+            <SubMenu key={item.key} icon={item.icon} title={item.title}>
+              {this.createMenu(item.children)}
+            </SubMenu>
+          )
+        }
+      }      
     })
+  }
+  hasAuth = (item)=>{
+    const {roleList,userName} = this.props
+    if(userName === "admin") return true
+    else if(!item.children) {
+      return roleList.find((item2)=>{return item2 === item.key})
+    }else if(item.children){
+      return item.children.some((item3)=>{return roleList.indexOf(item3.key) !== -1})
+    }
   }
   render(){
     return (
@@ -54,6 +65,6 @@ class LeftNav extends Component{
   }
 }
 export default connect(
-  () => ({}),
+  (state) => ({roleList:state.userInfo.user.role.menus,userName:state.userInfo.user.username}),
   {saveTitle:createSaveTitleAction}  
 )(withRouter(LeftNav))
